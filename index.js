@@ -19,7 +19,7 @@ io.sockets.on('connection', function (socket) {
                 db.collection('log').find({channel:channel}).sort({data:1}).toArray(function(err,doc){
                     if (err) console.log(err);
                     doc.forEach(function(item){
-                        io.to(channel).emit('receive', {chat:item});
+                        socket.emit('receive', {chat:item});
                     });
                     client.close();
                 });
