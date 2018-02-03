@@ -10,8 +10,6 @@ app.use('/', express.static(__dirname + '/build'));
 io.sockets.on('connection', function (socket) {
     socket.on('channelJoin',function(channel){
         socket.join(channel);
-        let msg={msg:socket.handshake.address+"님이 "+channel+" 채널에 입장하셨습니다."};
-        io.to(channel).emit('receive', {chat:msg});
         MongoClient.connect('mongodb://localhost:27017/', function (error, client) {
             if (error) console.log(error);
             else {
@@ -21,6 +19,8 @@ io.sockets.on('connection', function (socket) {
                     doc.forEach(function(item){
                         socket.emit('receive', {chat:item});
                     });
+                    let msg={msg:socket.handshake.address+"님이 "+channel+" 채널에 입장하셨습니다."};
+                    io.to(channel).emit('receive', {chat:msg});
                     client.close();
                 });
             }
